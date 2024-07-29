@@ -8,7 +8,7 @@ def test_get_assignments_teacher_1(client, h_teacher_1):
 
     data = response.json['data']
     for assignment in data:
-        assert assignment['teacher_id'] == 1
+        assert assignment['teacher_id'] == 2
 
 
 def test_get_assignments_teacher_2(client, h_teacher_2):
@@ -33,7 +33,7 @@ def test_grade_assignment_cross(client, h_teacher_2):
         '/teacher/assignments/grade',
         headers=h_teacher_2,
         json={
-            "id": 1,
+            "id":69,
             "grade": "A"
         }
     )

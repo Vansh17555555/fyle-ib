@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint,request,json
 from core import db
 from core.apis import decorators
 from core.apis.responses import APIResponse
@@ -12,7 +12,13 @@ teacher_assignments_resources = Blueprint('teacher_assignments_resources', __nam
 @decorators.authenticate_principal
 def list_assignments(p):
     """Returns list of assignments"""
-    teachers_assignments = Assignment.get_assignments_by_teacher()
+    x_principal_header=request.headers.get('X-Principal')
+    if x_principal_header:
+        x_principal = json.loads(x_principal_header)
+        teacher_id = x_principal.get('teacher_id')
+    else:
+        return APIResponse.respond_with_error(message="X-Principal header is missing", status_code=400)
+    teachers_assignments = Assignment.get_assignments_by_teacher(teacher_id=teacher_id)
     teachers_assignments_dump = AssignmentSchema().dump(teachers_assignments, many=True)
     return APIResponse.respond(data=teachers_assignments_dump)
 
